@@ -18,7 +18,6 @@ def place_sheet(r,default_speed,xy_coord,h_above_sheets,pump_pin):
   r.set_joint_speed(5)
   r.linear_probe(get_pose_from_xy(xy_coord,-150))
   GPIO.output(pump_pin,GPIO.LOW)
-  #r.set_joint_speed(default_speed)
   r.go_to_pose(get_pose_from_xy(xy_coord,h_above_sheets))
 
 def pick_sheet(r,default_speed,xy_coord,h_above_sheets,pump_pin):
@@ -30,8 +29,8 @@ def pick_sheet(r,default_speed,xy_coord,h_above_sheets,pump_pin):
   r.jog([0,0,-20,0,0])
   print(r.get_tool_pose())
   time.sleep(1)
-  #input()
-  r.go_to_pose(get_pose_from_xy(xy_coord,h_above_sheets))
+  input()
+  r.linear_move_to_pose(get_pose_from_xy(xy_coord,h_above_sheets))
 
 def main():
   r=Robot(False)
@@ -49,7 +48,7 @@ def main():
   r.reset_angles([-30,-80,155,0,0])
 
   pick_sheet(r,default_speed,[250,0],h_above_sheets,pump_pin)
-  place_sheet(r,default_speed,[350,0],h_above_sheets,pump_pin)
+  place_sheet(r,default_speed,[450,0],h_above_sheets,pump_pin)
   GPIO.output(pump_pin,GPIO.LOW)
   r.set_joint_speed(default_speed)
   r.go_to_foetus_pos()
