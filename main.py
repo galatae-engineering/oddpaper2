@@ -26,17 +26,19 @@ def pick_sheet(r,default_speed,xy_coord,h_above_sheets,pump_pin):
   GPIO.output(pump_pin,GPIO.HIGH)
   r.set_joint_speed(5)
   r.linear_probe(get_pose_from_xy(xy_coord,-150))
-  r.jog([0,0,-20,0,0])
   print(r.get_tool_pose())
   time.sleep(1)
-  input()
   r.linear_move_to_pose(get_pose_from_xy(xy_coord,h_above_sheets))
+
+def pick_and_place_sheet(pick_coord,place_coord,r,default_speed,h_above_sheets,pump_pin):
+  pick_sheet(r,default_speed,pick_coord,h_above_sheets,pump_pin)
+  place_sheet(r,default_speed,place_coord,h_above_sheets,pump_pin)
 
 def main():
   r=Robot(False)
   pump_pin=4
   default_speed=30
-  h_above_sheets=-80
+  h_above_sheets=-50
 
   GPIO.setmode(GPIO.BCM)
   GPIO.setup(pump_pin,GPIO.OUT)
@@ -47,12 +49,14 @@ def main():
   r.set_joint_speed(default_speed)
   r.reset_angles([-30,-80,155,0,0])
 
-  pick_sheet(r,default_speed,[250,0],h_above_sheets,pump_pin)
-  place_sheet(r,default_speed,[450,0],h_above_sheets,pump_pin)
+  pick_and_place_sheet([250,0],[450,0],r,default_speed,h_above_sheets,pump_pin)
+  #pick_sheet(r,default_speed,[250,0],h_above_sheets,pump_pin)
+  #place_sheet(r,default_speed,[450,0],h_above_sheets,pump_pin)
   GPIO.output(pump_pin,GPIO.LOW)
   r.set_joint_speed(default_speed)
   r.go_to_foetus_pos()
   GPIO.output(pump_pin,GPIO.LOW)
+  r.disable_motors()
 
 if __name__ == "__main__":
   main()
