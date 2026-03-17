@@ -2,6 +2,7 @@ import sys
 import time
 import math
 import RPi.GPIO as GPIO
+import math
 sys.path.append('../galatae-api/')
 from robot import Robot
 
@@ -10,7 +11,9 @@ def go_to_pose_at_specific_height(pose,height,r):
     r.go_to_pose(pose)
 
 def get_pose_from_xy(xy_coord,z):
-  return xy_coord+[z,180,90]
+  roll=math.atan(float(xy_coord[1])/xy_coord[0])*180/math.pi
+  print(roll)
+  return xy_coord+[z,180,90+roll]
 
 def place_sheet(r,default_speed,xy_coord,h_above_sheets,pump_pin):
   r.set_joint_speed(default_speed)
@@ -40,6 +43,10 @@ def main():
   default_speed=30
   h_above_sheets=-50
 
+  x_start=200
+  dx=220
+  dy=150
+
   GPIO.setmode(GPIO.BCM)
   GPIO.setup(pump_pin,GPIO.OUT)
   GPIO.output(pump_pin,GPIO.LOW)
@@ -47,9 +54,11 @@ def main():
   r.reset_and_home_joints()
   #r.reset_and_home_joints()
   r.set_joint_speed(default_speed)
-  r.reset_angles([-30,-80,155,0,0])
 
-  pick_and_place_sheet([250,0],[450,0],r,default_speed,h_above_sheets,pump_pin)
+  pick_and_place_sheet([x_start+dx+15,-dy-10],[x_start,0],r,default_speed,h_above_sheets,pump_pin)
+  pick_and_place_sheet([x_start+dx+15,0],[x_start,0],r,default_speed,h_above_sheets,pump_pin)
+  pick_and_place_sheet([x_start+dx+15,dy+10],[x_start,0],r,default_speed,h_above_sheets,pump_pin)
+  
   #pick_sheet(r,default_speed,[250,0],h_above_sheets,pump_pin)
   #place_sheet(r,default_speed,[450,0],h_above_sheets,pump_pin)
   GPIO.output(pump_pin,GPIO.LOW)
