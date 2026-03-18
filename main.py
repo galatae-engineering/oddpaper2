@@ -28,7 +28,7 @@ def pick_sheet(r,default_speed,xy_coord,h_above_sheets,pump_pin,probe_speed):
   GPIO.output(pump_pin,GPIO.HIGH)
   r.set_joint_speed(probe_speed)
   r.linear_probe(get_pose_from_xy(xy_coord,-150))
-  time.sleep(1)
+  time.sleep(0.5)
   r.linear_move_to_pose(get_pose_from_xy(xy_coord,h_above_sheets))
 
 def pick_and_place_sheet(pick_coord,place_coord,r,default_speed,h_above_sheets,pump_pin,probe_speed):
@@ -38,8 +38,8 @@ def pick_and_place_sheet(pick_coord,place_coord,r,default_speed,h_above_sheets,p
 def main():
   r=Robot(False)
   pump_pin=4
-  default_speed=30
-  probe_speed=10
+  default_speed=50
+  probe_speed=20
   h_above_sheets=-50
   
   x_start=200
@@ -53,17 +53,18 @@ def main():
   GPIO.output(pump_pin,GPIO.LOW)
   
   r.reset_and_home_joints()
-  
+  r.set_joint_speed(default_speed)
+
   try:
-    r.set_joint_speed(default_speed)
-
-    for i in range(sheets_per_pile):
-      for j in range(number_of_piles):
-        pick_and_place_sheet([x_start,0],[x_start+delta_x,((1-number_of_piles)/2+j)*delta_y],r,default_speed,h_above_sheets,pump_pin,probe_speed)
-
-    for i in range(sheets_per_pile):
-      for j in range(number_of_piles):
-        pick_and_place_sheet([x_start+delta_x,((1-number_of_piles)/2+j)*delta_y],[x_start,0],r,default_speed,h_above_sheets,pump_pin,probe_speed)
+    for k in range(1):
+      """
+      for i in range(sheets_per_pile):
+        for j in range(number_of_piles):
+          pick_and_place_sheet([x_start,0],[x_start+delta_x,((1-number_of_piles)/2+j)*delta_y],r,default_speed,h_above_sheets,pump_pin,probe_speed)
+      """
+      for i in range(sheets_per_pile):
+        for j in range(number_of_piles):
+          pick_and_place_sheet([x_start+delta_x,((1-number_of_piles)/2+j)*delta_y],[x_start,0],r,default_speed,h_above_sheets,pump_pin,probe_speed)
 
   except:
     print("error:")
