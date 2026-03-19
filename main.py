@@ -12,7 +12,7 @@ def go_to_pose_at_specific_height(pose,height,r):
 
 def get_pose_from_xy(xy_coord,z):
   roll=math.atan(float(xy_coord[1])/xy_coord[0])*180/math.pi
-  return xy_coord+[z,180,90+20+roll]
+  return xy_coord+[z,180,90+5+roll]
 
 def place_sheet(r,default_speed,xy_coord,h_above_sheets,pump_pin,probe_speed):
   r.set_joint_speed(default_speed)
@@ -46,7 +46,7 @@ def main():
   delta_x=220+15
   delta_y=150+10
   number_of_piles=3
-  sheets_per_pile=2
+  sheets_per_pile=1
 
   GPIO.setmode(GPIO.BCM)
   GPIO.setup(pump_pin,GPIO.OUT)
