@@ -23,13 +23,14 @@ def place_sheet(r,default_speed,xy_coord,pump_pin):
   GPIO.output(pump_pin,GPIO.LOW)
   go_above_sheet(xy_coord,default_speed,r)
   probe_at_defined_speed(xy_coord,default_speed,r)
-  time.sleep(3)
+  time.sleep(1)
   go_above_sheet(xy_coord,default_speed,r)
 
 def pick_sheet(r,default_speed,xy_coord,pump_pin):
   go_above_sheet(xy_coord,default_speed,r)
   GPIO.output(pump_pin,GPIO.HIGH)
   probe_at_defined_speed(xy_coord,10,r)
+  time.sleep(1)
   go_above_sheet(xy_coord,default_speed,r)
   #time.sleep(0.5)
 
