@@ -17,19 +17,19 @@ def probe_at_defined_speed(xy_coord,speed,r):
 
 def go_above_sheet(xy_coord,speed,r):
   r.set_joint_speed(speed)
-  r.go_to_pose(get_pose_from_point(xy_coord+[-20]))
+  r.go_to_pose(get_pose_from_point(xy_coord+[-10]))
 
 def place_sheet(r,default_speed,xy_coord,pump_pin):
   GPIO.output(pump_pin,GPIO.LOW)
   go_above_sheet(xy_coord,default_speed,r)
   probe_at_defined_speed(xy_coord,default_speed,r)
-  time.sleep(1)
+  time.sleep(2)
   go_above_sheet(xy_coord,default_speed,r)
 
 def pick_sheet(r,default_speed,xy_coord,pump_pin):
   go_above_sheet(xy_coord,default_speed,r)
   GPIO.output(pump_pin,GPIO.HIGH)
-  probe_at_defined_speed(xy_coord,10,r)
+  probe_at_defined_speed(xy_coord,20,r)
   time.sleep(1)
   go_above_sheet(xy_coord,default_speed,r)
   #time.sleep(0.5)
@@ -44,10 +44,9 @@ def main():
   default_speed=50
   
   x_start=200
-  delta_x=220+15
+  delta_x=220+25
   delta_y=150+10
-  number_of_piles=5
-  piles_per_line=5
+  number_of_piles=3
 
   GPIO.setmode(GPIO.BCM)
   GPIO.setup(pump_pin,GPIO.OUT)
