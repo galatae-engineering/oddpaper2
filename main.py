@@ -8,7 +8,7 @@ from robot import Robot
 import traceback
 
 def get_pose_from_point(point):
-  roll=math.atan(float(point[1])/point[0])*180/math.pi
+  roll=math.atan(float(point[1])/point[0])*180/math.pi-3
   return point+[180,roll]
 
 def probe_at_defined_speed(xy_coord,speed,r):
@@ -23,8 +23,11 @@ def place_sheet(r,default_speed,xy_coord,pump_pin):
   GPIO.output(pump_pin,GPIO.LOW)
   go_above_sheet(xy_coord,default_speed,r)
   probe_at_defined_speed(xy_coord,default_speed,r)
-  time.sleep(2)
+  stack_height=r.get_tool_pose()[2]
+  print("z:",r.get_tool_pose()[2])
+  time.sleep(3)
   go_above_sheet(xy_coord,default_speed,r)
+  return stack_height
 
 def pick_sheet(r,default_speed,xy_coord,pump_pin):
   go_above_sheet(xy_coord,default_speed,r)
@@ -36,17 +39,22 @@ def pick_sheet(r,default_speed,xy_coord,pump_pin):
 
 def pick_and_place_sheet(pick_coord,place_coord,r,default_speed,pump_pin):
   pick_sheet(r,default_speed,pick_coord,pump_pin)
-  place_sheet(r,default_speed,place_coord,pump_pin)
+  return place_sheet(r,default_speed,place_coord,pump_pin)
+
+def check_if_everything_ok(stack_height,previous_stack_height):
+  return abs(stack_height-previous_stack_height)<1
 
 def main():
   r=Robot(False)
   pump_pin=5
   default_speed=50
   
-  x_start=200
-  delta_x=220+25
+  x_start=200+10
+  delta_x=220+15
   delta_y=150+10
-  number_of_piles=3
+  number_of_stacks=3
+
+  everything_ok=True
 
   GPIO.setmode(GPIO.BCM)
   GPIO.setup(pump_pin,GPIO.OUT)
@@ -54,18 +62,26 @@ def main():
   
   r.reset_and_home_joints()
 
+  stacks_coord=[]
+  first_line_N=min(number_of_stacks,3)
+  for i in range(first_line_N):
+    stacks_coord+=[[x_start+delta_x,((1-first_line_N)/2+j)*delta_y],[x_start,0]]
+  
+  if(3<number_of_stacks):
+    for i in range(number_of_stacks-3):
+      stacks_coord+=[[x_start,(2*j-1)*delta_y],[x_start,0]]
+  
   try:
-    for i in range(10):
+    while(everything_ok):
+      i=0
       t=time.time()
-
-      first_line_N=min(number_of_piles,3)
-      for j in range(first_line_N):
-        pick_and_place_sheet([x_start+delta_x,((1-first_line_N)/2+j)*delta_y],[x_start,0],r,default_speed,pump_pin)
-      if(3<number_of_piles):
-        for j in range(number_of_piles-3):
-          pick_and_place_sheet([x_start,(2*j-1)*delta_y],[x_start,0],r,default_speed,pump_pin)
-          pass
-      print("t:",time.time()-t)
+      while(i<number_of_stacks and everything_ok):
+        previous_stack_height=stack_height
+        stack_height=pick_and_place_sheet(stacks_coord[i][0],stacks_coord[i][1],r,default_speed,pump_pin)
+        everything_ok=check_if_everything_ok(stack_height,previous_stack_height)
+      
+      print("t:",(time.time()-t)/number_of_stacks)
+      i+=1
 
   except:
     print(traceback.format_exc())
