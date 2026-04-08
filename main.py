@@ -44,6 +44,13 @@ def pick_and_place_sheet(pick_coord,place_coord,r,default_speed,pump_pin):
 def check_if_everything_ok(stack_height,previous_stack_height):
   return abs(stack_height-previous_stack_height)<1
 
+def move_one_sheet_per_stack(stacks_coord,r,default_speed,pump_pin,previous_stack_height):
+  while i<len(stacks_coord) and everything_ok:
+    stack_height=pick_and_place_sheet(stacks_coord[i][0],stacks_coord[i][1],r,default_speed,pump_pin)
+    everything_ok=check_if_everything_ok(stack_height,previous_stack_height)
+    i+=1
+  return everything_ok
+    
 def main():
   r=Robot(False)
   pump_pin=5
@@ -72,16 +79,27 @@ def main():
       stacks_coord+=[[x_start,(2*j-1)*delta_y],[x_start,0]]
   
   try:
+    t=time.time()
+    stack_height=pick_and_place_sheet(stacks_coord[i][0],stacks_coord[i][1],r,default_speed,pump_pin)
+
+    i=1
+    while i<len(stacks_coord) and everything_ok:
+      previous_stack_height=stack_height
+      stack_height=pick_and_place_sheet(stacks_coord[i][0],stacks_coord[i][1],r,default_speed,pump_pin)
+      everything_ok=check_if_everything_ok(stack_height,previous_stack_height)
+      i+=1
+
+    print("t:",(time.time()-t)/number_of_stacks)
+                                        
     while(everything_ok):
-      i=0
       t=time.time()
-      while(i<number_of_stacks and everything_ok):
+      i=0
+      while i<len(stacks_coord) and everything_ok:
         previous_stack_height=stack_height
         stack_height=pick_and_place_sheet(stacks_coord[i][0],stacks_coord[i][1],r,default_speed,pump_pin)
         everything_ok=check_if_everything_ok(stack_height,previous_stack_height)
-      
+        i+=1
       print("t:",(time.time()-t)/number_of_stacks)
-      i+=1
 
   except:
     print(traceback.format_exc())
