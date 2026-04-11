@@ -17,7 +17,7 @@ def probe_at_defined_speed(xy_coord,speed,r,min_stack_height):
 
 def go_above_sheet(xy_coord,speed,r):
   r.set_joint_speed(speed)
-  r.go_to_pose(get_pose_from_point(xy_coord+[-10]))
+  r.go_to_pose(get_pose_from_point(xy_coord+[50]))
 
 def place_sheet(r,default_speed,xy_coord,pump_pin,min_stack_height):
   GPIO.output(pump_pin,GPIO.LOW)
@@ -25,7 +25,7 @@ def place_sheet(r,default_speed,xy_coord,pump_pin,min_stack_height):
   probe_at_defined_speed(xy_coord,default_speed,r,min_stack_height)
   stack_height=r.get_tool_pose()[2]
   print("stack_height:",r.get_tool_pose()[2])
-  time.sleep(3)
+  time.sleep(2)
   go_above_sheet(xy_coord,default_speed,r)
   return stack_height
 
