@@ -61,6 +61,7 @@ def main():
   default_speed=50
   
   x_start=200+10
+  #y_start=5
   delta_x=220+15
   delta_y=150+10
   number_of_stacks=3
@@ -75,7 +76,7 @@ def main():
   stacks_coord=[]
   first_line_N=min(number_of_stacks,3)
   for i in range(first_line_N):
-    stacks_coord+=[[[x_start+delta_x,((1-first_line_N)/2+i)*delta_y],[x_start,0]]]
+    stacks_coord+=[[[x_start+delta_x,5+((1-first_line_N)/2+i)*delta_y],[x_start,0]]]
   
   print(stacks_coord)
   """
@@ -83,6 +84,7 @@ def main():
     for i in range(number_of_stacks-3):
       stacks_coord+=[[x_start,(2*j-1)*delta_y],[x_start,0]]
   """
+
   try:
     t=time.time()
     stack_height=pick_and_place_sheet(stacks_coord[0][0],stacks_coord[0][1],r,default_speed,pump_pin,min_stack_height)
