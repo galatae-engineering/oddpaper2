@@ -1,10 +1,8 @@
 import sys
-
 sys.path.append('../galatae-api/')
 from robot import Robot
 import traceback
 import random
-
 from pick_and_place import *
 
 def move_one_sheet_per_stack(stacks_coord,r,default_speed,pump_pin,sensor_pin,x_start):
@@ -22,20 +20,16 @@ def get_roll(x,y):
 def get_stacks_xy_roll(x_start):
   delta_x=220+15
   delta_y=150+10
-  number_of_stacks=5
+  stacks_per_line=5
+  #number_of_stacks=9
 
   stacks_xy_roll=[]
-  first_line_N=min(number_of_stacks,3)
-  for i in range(first_line_N):
-    x=x_start+delta_x
-    y=5+((1-first_line_N)/2+i)*delta_y
-    stacks_xy_roll+=[[x,y,get_roll(x,y)]]
-  
-  if(3<number_of_stacks):
-    for i in range(number_of_stacks-3):
-      x=x_start
-      y=(2*i-1)*delta_y
-      stacks_xy_roll+=[[x,y,get_roll(x,y)]]
+  for i in 2:
+    for j in range(stacks_per_line):
+      if(not(i==0 and j==(stacks_per_line-1)/2)):
+        x=x_start+i*delta_x
+        y=5+((1-stacks_per_line)/2+j)*delta_y
+        stacks_xy_roll+=[[x,y,get_roll(x,y)]]
 
   return stacks_xy_roll 
 
