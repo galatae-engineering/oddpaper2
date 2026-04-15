@@ -20,11 +20,11 @@ def get_roll(x,y):
 def get_stacks_xy_roll(x_start):
   delta_x=220+15
   delta_y=150+10
-  stacks_per_line=5
+  stacks_per_line=3
   #number_of_stacks=9
 
   stacks_xy_roll=[]
-  for i in 2:
+  for i in range(2):
     for j in range(stacks_per_line):
       if(not(i==0 and j==(stacks_per_line-1)/2)):
         x=x_start+i*delta_x
