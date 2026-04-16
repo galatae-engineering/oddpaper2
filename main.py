@@ -5,15 +5,6 @@ import traceback
 import random
 from pick_and_place import *
 
-def move_one_sheet_per_stack(stacks_coord,r,default_speed,pump_pin,sensor_pin,x_start):
-  i=0
-  success=True
-  while success and i<len(stacks_coord):
-    success=pick_and_place_sheet(r,default_speed,stacks_coord[i],pump_pin,sensor_pin,[x_start,0,0])
-    i+=1
-
-  return success
-
 def get_roll(x,y):
   return math.atan(float(y)/x)*180/math.pi-3
 
@@ -50,7 +41,7 @@ def main():
   place_stack_index=2
   separator_stack_index=8
   place_xy_roll=all_stacks_xy_rolls[place_stack_index]
-  pick_xy_rolls=delete_elements_from_list([place_stack_index,separator_stack_index,0,4,9],all_stacks_xy_rolls)
+  pick_xy_rolls=delete_elements_from_list([place_stack_index,separator_stack_index,4,9],all_stacks_xy_rolls)
   print(pick_xy_rolls)
   print(all_stacks_xy_rolls)
 
