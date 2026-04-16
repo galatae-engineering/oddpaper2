@@ -13,14 +13,14 @@ def go_at_defined_speed(r,speed,xy_coord,z,roll):
 def place_sheet(pump_pin,r,default_speed,xy_coord,safe_height,roll,sensor_pin):
   GPIO.output(pump_pin,GPIO.LOW)
   go_at_defined_speed(r,default_speed,xy_coord,safe_height,roll)
-  #probe_at_defined_speed(r,default_speed,xy_coord,roll)
+  probe_at_defined_speed(r,default_speed,xy_coord,roll)
   stack_height=r.get_tool_pose()[2]
-
-  #go_at_defined_speed(r,default_speed,xy_coord,max(safe_height,stack_height+50),roll)
+  go_at_defined_speed(r,default_speed,xy_coord,max(safe_height,stack_height+50),roll)
  
   dt=0.1
   i=0
   sheet_dropped=GPIO.input(sensor_pin)
+  print("sheet_dropped",sheet_dropped)
   while(not sheet_dropped and i*dt<10):
     time.sleep(0.1)
     i+=1
@@ -54,7 +54,7 @@ def pick_sheet(r,default_speed,xy_coord,safe_height,roll,pump_pin,sensor_pin):
   return success
 
 def pick_and_place_sheet(r,default_speed,pick_xy_roll,pump_pin,sensor_pin,place_xy_roll):
-  safe_height=30
+  safe_height=35
   success=pick_sheet(r,default_speed,pick_xy_roll[0:2],safe_height,pick_xy_roll[2],pump_pin,sensor_pin)
   
   if(success):
