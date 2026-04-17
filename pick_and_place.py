@@ -4,7 +4,8 @@ import math
 
 def probe_at_defined_speed(r,speed,xy_coord,roll):
   r.set_joint_speed(speed)
-  r.linear_probe(xy_coord+[-110,180,roll])
+  a=xy_coord+[-110,180,roll]
+  return r.linear_probe(a)
 
 def go_at_defined_speed(r,speed,xy_coord,z,roll):
   r.set_joint_speed(speed)
@@ -13,28 +14,19 @@ def go_at_defined_speed(r,speed,xy_coord,z,roll):
 def place_sheet(pump_pin,r,default_speed,xy_coord,safe_height,roll,sensor_pin):
   GPIO.output(pump_pin,GPIO.LOW)
   go_at_defined_speed(r,default_speed,xy_coord,safe_height,roll)
-  probe_at_defined_speed(r,default_speed,xy_coord,roll)
-  stack_height=r.get_tool_pose()[2]
-  go_at_defined_speed(r,default_speed,xy_coord,max(safe_height,stack_height+50),roll)
+  #probe_at_defined_speed(r,default_speed,xy_coord,roll)
+  #stack_height=r.get_tool_pose()[2]
+  #go_at_defined_speed(r,default_speed,xy_coord,max(safe_height,stack_height+50),roll)
  
   dt=0.1
   i=0
   sheet_dropped=GPIO.input(sensor_pin)
-  print("sheet_dropped",sheet_dropped)
   while(not sheet_dropped and i*dt<10):
     time.sleep(0.1)
     i+=1
     sheet_dropped=GPIO.input(sensor_pin)
 
-  print("sheet_dropped",sheet_dropped)
-
-  """
-  stack_full=20<stack_height
-  if(stack_full):
-    print("stack_height",stack_height)
-  """
-
-  return sheet_dropped #and not stack_full
+  return sheet_dropped
 
 def pick_sheet(r,default_speed,xy_coord,safe_height,roll,pump_pin,sensor_pin):
   go_at_defined_speed(r,default_speed,xy_coord,safe_height,roll)

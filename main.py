@@ -41,9 +41,7 @@ def main():
   place_stack_index=2
   separator_stack_index=8
   place_xy_roll=all_stacks_xy_rolls[place_stack_index]
-  pick_xy_rolls=delete_elements_from_list([place_stack_index,separator_stack_index,4,9],all_stacks_xy_rolls)
-  print(pick_xy_rolls)
-  print(all_stacks_xy_rolls)
+  pick_xy_rolls=[all_stacks_xy_rolls[0]] #delete_elements_from_list([place_stack_index,separator_stack_index,4,9],all_stacks_xy_rolls)
 
   GPIO.setmode(GPIO.BCM)
   GPIO.setup(sensor_pin,GPIO.IN)
@@ -53,6 +51,9 @@ def main():
   go_on=True
   try:
     r.reset_and_home_joints()
+
+    #r.go_to_pose([220,-315,35,180,-58.07])
+    #r.linear_probe([220, -315.0, -110, 180, -58.07])
     
     while go_on:
       t=time.time()
