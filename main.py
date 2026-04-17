@@ -6,7 +6,7 @@ import random
 from pick_and_place import *
 
 def get_roll(x,y):
-  return math.atan(float(y)/x)*180/math.pi-3
+  return math.atan(float(y)/x)*180/math.pi
 
 def get_all_stacks_xy_roll():
   x_start=220
@@ -30,45 +30,53 @@ def delete_elements_from_list(indices,list_original):
     del new_list[i]
   return new_list
 
-def main():
-  r=Robot(False)
-  pump_pin=5
-  sensor_pin=6  
-  default_speed=50
+def test_positions(all_stacks_xy_rolls):
+  safe_height=45
+  i=0
+  for i in [0,1,2,3,4,5,6,7,8,9]:
+    go_at_defined_speed(r,50,all_stacks_xy_rolls[i][:2],safe_height,all_stacks_xy_rolls[i][2])
+    probe_at_defined_speed(r,10,all_stacks_xy_rolls[i][:2],all_stacks_xy_rolls[i][2])
+    input()
+    go_at_defined_speed(r,50,all_stacks_xy_rolls[i][:2],safe_height,all_stacks_xy_rolls[i][2])
+
+def make_notebooks(all_stacks_xy_rolls,pump_pin,r,default_speed,sensor_pin):
   pages_per_book=3
-
-  all_stacks_xy_rolls=get_all_stacks_xy_roll()
   place_stack_index=2
-  separator_stack_index=8
+  separator_stack_index=9
   place_xy_roll=all_stacks_xy_rolls[place_stack_index]
-  pick_xy_rolls=[all_stacks_xy_rolls[0]] #delete_elements_from_list([place_stack_index,separator_stack_index,4,9],all_stacks_xy_rolls)
+  #pick_xy_rolls=[all_stacks_xy_rolls[0]]
+  pick_xy_rolls=delete_elements_from_list([place_stack_index,separator_stack_index],all_stacks_xy_rolls)
 
+  go_on=True
+  while go_on:
+    t=time.time()
+    page=0
+    while(page<pages_per_book and go_on):
+      random_index=random.randrange(0,len(pick_xy_rolls))
+      go_on=pick_and_place_sheet(r,default_speed,pick_xy_rolls[random_index],pump_pin,sensor_pin,place_xy_roll)
+      page+=1
+    if(go_on):
+      go_on=pick_and_place_sheet(r,default_speed,all_stacks_xy_rolls[separator_stack_index],pump_pin,sensor_pin,place_xy_roll)
+    print("t:",(time.time()-t)/(pages_per_book+1))
+
+def main():
+  default_speed=50
+
+  r=Robot(False)
+  all_stacks_xy_rolls=get_all_stacks_xy_roll()
+
+  sensor_pin=6 
+  pump_pin=5
   GPIO.setmode(GPIO.BCM)
   GPIO.setup(sensor_pin,GPIO.IN)
   GPIO.setup(pump_pin,GPIO.OUT)
   GPIO.output(pump_pin,GPIO.LOW)
 
-  go_on=True
   try:
     r.reset_and_home_joints()
+    #pick_and_place_sheet(r,default_speed,all_stacks_xy_rolls[6],pump_pin,sensor_pin,all_stacks_xy_rolls[2])
+    make_notebooks(all_stacks_xy_rolls,pump_pin,r,default_speed,sensor_pin)
 
-    i=0
-    go_at_defined_speed(r,50,all_stacks_xy_rolls[i][:2],35,all_stacks_xy_rolls[i][2])
-    #r.linear_probe([220, -315.0, -110, 180, -58.07])
-    time.sleep(1000)
-    
-    """
-    while go_on:
-      t=time.time()
-      page=0
-      while(page<pages_per_book and go_on):
-        random_index=random.randrange(0,len(pick_xy_rolls))
-        go_on=pick_and_place_sheet(r,default_speed,pick_xy_rolls[random_index],pump_pin,sensor_pin,place_xy_roll)
-        page+=1
-      if(go_on):
-        go_on=pick_and_place_sheet(r,default_speed,all_stacks_xy_rolls[separator_stack_index],pump_pin,sensor_pin,place_xy_roll)
-      print("t:",(time.time()-t)/(pages_per_book+1))
-    """
   except:
     print(traceback.format_exc())
 

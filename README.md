@@ -8,5 +8,7 @@ pip install pyserial
 LAUNCH:
 cd ~/git/oddpaper2 && source venv/bin/activate && sudo python main.py
 
-pinctrl set 4 op dl
-pinctrl set 4 op dh
+pinctrl set 5 op dl
+pinctrl set 5 op dh
+
+vcgencmd measure_temp
