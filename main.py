@@ -9,9 +9,9 @@ def get_roll(x,y):
   return math.atan(float(y)/x)*180/math.pi-3
 
 def get_all_stacks_xy_roll():
-  x_start=210+10
-  delta_x=220+15
-  delta_y=150+10
+  x_start=220
+  delta_x=220
+  delta_y=160
   stacks_per_line=5
 
   xy_roll=[]
@@ -52,9 +52,12 @@ def main():
   try:
     r.reset_and_home_joints()
 
-    #r.go_to_pose([220,-315,35,180,-58.07])
+    i=0
+    go_at_defined_speed(r,50,all_stacks_xy_rolls[i][:2],35,all_stacks_xy_rolls[i][2])
     #r.linear_probe([220, -315.0, -110, 180, -58.07])
+    time.sleep(1000)
     
+    """
     while go_on:
       t=time.time()
       page=0
@@ -65,7 +68,7 @@ def main():
       if(go_on):
         go_on=pick_and_place_sheet(r,default_speed,all_stacks_xy_rolls[separator_stack_index],pump_pin,sensor_pin,place_xy_roll)
       print("t:",(time.time()-t)/(pages_per_book+1))
-
+    """
   except:
     print(traceback.format_exc())
 
