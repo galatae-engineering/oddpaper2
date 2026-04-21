@@ -4,6 +4,7 @@ from robot import Robot
 import traceback
 import random
 from pick_and_place import *
+from datetime import datetime
 
 def get_roll(x,y):
   return math.atan(float(y)/x)*180/math.pi
@@ -71,6 +72,8 @@ def main():
   GPIO.setup(sensor_pin,GPIO.IN)
   GPIO.setup(pump_pin,GPIO.OUT)
   GPIO.output(pump_pin,GPIO.LOW)
+
+  print(datetime.now())
 
   try:
     r.reset_and_home_joints()
