@@ -14,7 +14,7 @@ def go_at_defined_speed(r,speed,xy_coord,z,roll):
 def place_sheet(pump_pin,r,default_speed,xy_coord,safe_height,roll,sensor_pin):
   GPIO.output(pump_pin,GPIO.LOW)
   go_at_defined_speed(r,default_speed,xy_coord,safe_height,roll)
-  go_at_defined_speed(r,default_speed,xy_coord,safe_height-30,roll)
+  go_at_defined_speed(r,default_speed,xy_coord,safe_height-50,roll)
   #go_at_defined_speed(r,default_speed,xy_coord,safe_height,roll)
   #probe_at_defined_speed(r,default_speed,xy_coord,roll)
   #stack_height=r.get_tool_pose()[2]
@@ -40,6 +40,7 @@ def pick_sheet(r,default_speed,xy_coord,safe_height,roll,pump_pin,sensor_pin):
   number_of_trials=0
   while(not success and number_of_trials<5):
     probe_at_defined_speed(r,20,xy_coord,roll)
+    #r.jog([0,0,-5,0,0])
     time.sleep(number_of_trials)
     r.jog([0,0,100,0,0])
     success=not GPIO.input(sensor_pin)

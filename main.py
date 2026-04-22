@@ -7,7 +7,7 @@ from pick_and_place import *
 from datetime import datetime
 
 def get_roll(x,y):
-  return math.atan(float(y)/x)*180/math.pi
+  return math.atan(float(y)/x)*180*1.05/math.pi
 
 def get_all_stacks_xy_roll():
   x_start=220
@@ -31,7 +31,7 @@ def delete_elements_from_list(indices,list_original):
     del new_list[i]
   return new_list
 
-def test_positions(all_stacks_xy_rolls):
+def test_positions(r,all_stacks_xy_rolls):
   safe_height=45
   i=0
   for i in [0,1,2,3,4,5,6,7,8,9]:
@@ -65,6 +65,7 @@ def main():
 
   r=Robot(False)
   all_stacks_xy_rolls=get_all_stacks_xy_roll()
+  print(all_stacks_xy_rolls)
 
   sensor_pin=6 
   pump_pin=5
@@ -77,8 +78,9 @@ def main():
 
   try:
     r.reset_and_home_joints()
+    test_positions(r,all_stacks_xy_rolls)
     #pick_and_place_sheet(r,default_speed,all_stacks_xy_rolls[6],pump_pin,sensor_pin,all_stacks_xy_rolls[2])
-    make_notebooks(all_stacks_xy_rolls,pump_pin,r,default_speed,sensor_pin)
+    #make_notebooks(all_stacks_xy_rolls,pump_pin,r,default_speed,sensor_pin)
 
   except:
     print(traceback.format_exc())
