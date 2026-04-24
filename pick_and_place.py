@@ -32,6 +32,12 @@ def place_sheet(pump_pin,r,default_speed,xy_coord,safe_height,roll,sensor_pin):
 
   return sheet_dropped
 
+def norm(v):
+  square_norm=0.0
+  for e in v:
+    square_norm+=e**2
+  return math.sqrt(square_norm)
+
 def pick_sheet(r,default_speed,xy_coord,safe_height,roll,pump_pin,sensor_pin):
   go_at_defined_speed(r,default_speed,xy_coord,safe_height,roll)
   GPIO.output(pump_pin,GPIO.HIGH)
@@ -39,13 +45,18 @@ def pick_sheet(r,default_speed,xy_coord,safe_height,roll,pump_pin,sensor_pin):
   success=False
   number_of_trials=0
   while(not success and number_of_trials<5):
-    probe_at_defined_speed(r,20,xy_coord,roll)
+    probe_at_defined_speed(r,6000/norm(xy_coord),xy_coord,roll)
     #r.jog([0,0,-5,0,0])
     time.sleep(number_of_trials)
-    r.jog([0,0,100,0,0])
+    r.set_joint_speed(default_speed)
+    for i in range(100):
+      r.jog([0,0,1,0,0])
+    
     success=not GPIO.input(sensor_pin)
     if(success):
-      go_at_defined_speed(r,default_speed,xy_coord,safe_height,roll)
+      #GPIO.output(pump_pin,GPIO.LOW)
+      r.linear_move_to_pose(xy_coord+[safe_height,180,roll])
+      #go_at_defined_speed(r,default_speed,xy_coord,safe_height,roll)
       success=not GPIO.input(sensor_pin)
     number_of_trials+=1
 
