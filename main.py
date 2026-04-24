@@ -7,7 +7,7 @@ from pick_and_place import *
 from datetime import datetime
 
 def get_roll(x,y):
-  return math.atan(float(y)/x)*180*1.05/math.pi
+  return math.atan(float(y)/x)*180*1.03/math.pi
 
 def get_all_stacks_xy_roll():
   x_start=220
@@ -18,11 +18,11 @@ def get_all_stacks_xy_roll():
   xy_roll=[]
   for i in range(2):
     for j in range(stacks_per_line):
-      x=x_start+i*delta_x
-      y=5+((1-stacks_per_line)/2+j)*delta_y
+      x=(x_start+i*delta_x)*1.02
+      y=4+(((1-stacks_per_line)/2+j)*delta_y)*1.03
       xy_roll+=[[x,y,get_roll(x,y)]]
 
-  return xy_roll 
+  return xy_roll
 
 def delete_elements_from_list(indices,list_original):
   new_list=list_original.copy()
@@ -45,7 +45,6 @@ def make_notebooks(all_stacks_xy_rolls,pump_pin,r,default_speed,sensor_pin):
   place_stack_index=2
   separator_stack_index=9
   place_xy_roll=all_stacks_xy_rolls[place_stack_index]
-  #pick_xy_rolls=[all_stacks_xy_rolls[0]]
   pick_xy_rolls=delete_elements_from_list([place_stack_index,separator_stack_index],all_stacks_xy_rolls)
 
   go_on=True
@@ -77,10 +76,13 @@ def main():
   print(datetime.now())
 
   try:
-    r.reset_and_home_joints()
-    test_positions(r,all_stacks_xy_rolls)
+    if(r.reset_and_home_joints()):
+      make_notebooks(all_stacks_xy_rolls,pump_pin,r,default_speed,sensor_pin)
+      #test_positions(r,all_stacks_xy_rolls)
+    else:
+      print("calib failed")
     #pick_and_place_sheet(r,default_speed,all_stacks_xy_rolls[6],pump_pin,sensor_pin,all_stacks_xy_rolls[2])
-    #make_notebooks(all_stacks_xy_rolls,pump_pin,r,default_speed,sensor_pin)
+    #
 
   except:
     print(traceback.format_exc())
