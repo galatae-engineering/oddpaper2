@@ -1,10 +1,19 @@
 import sys
 sys.path.append('../galatae-api/')
+
+import numpy as np
+#import cv2 as cv
+from threading import Thread
 from robot import Robot
+#import keyboard
+import math
+import time
 import traceback
+import cv2 as cv
+import RPi.GPIO as GPIO
+from datetime import datetime
 import random
 from pick_and_place import *
-from datetime import datetime
 
 def get_roll(x,y):
   return math.atan(float(y)/x)*180*1.03/math.pi
@@ -63,6 +72,9 @@ def main():
   default_speed=50
 
   r=Robot(False)
+  video_thread=Thread(target=r.show_video)
+  video_thread.start()
+
   all_stacks_xy_rolls=get_all_stacks_xy_roll()
   print(all_stacks_xy_rolls)
 
