@@ -50,7 +50,7 @@ def test_positions(r,all_stacks_xy_rolls):
     go_at_defined_speed(r,50,all_stacks_xy_rolls[i][:2],safe_height,all_stacks_xy_rolls[i][2])
 
 def make_notebooks(all_stacks_xy_rolls,pump_pin,r,default_speed,sensor_pin):
-  pages_per_book=3
+  pages_per_book=50
   place_stack_index=2
   separator_stack_index=9
   place_xy_roll=all_stacks_xy_rolls[place_stack_index]
