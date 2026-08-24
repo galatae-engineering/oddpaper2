@@ -72,6 +72,7 @@ def main():
   default_speed=50
 
   r=Robot(False)
+  r.reset()
   video_thread=Thread(target=r.show_video)
   video_thread.start()
 
@@ -88,7 +89,7 @@ def main():
   print(datetime.now())
 
   try:
-    if(r.reset_and_home_joints()):
+    if(r.calibrate()):
       make_notebooks(all_stacks_xy_rolls,pump_pin,r,default_speed,sensor_pin)
       #test_positions(r,all_stacks_xy_rolls)
     else:

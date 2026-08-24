@@ -8,7 +8,7 @@ pip install opencv-python
 pip install RPi.GPIO
 
 LAUNCH:
-cd ~/git/oddpaper2 && source venv/bin/activate && sudo python main.py
+cd ~/git/oddpaper2 && source venv/bin/activate && python main.py
 
 pinctrl set 5 op dl
 pinctrl set 5 op dh
